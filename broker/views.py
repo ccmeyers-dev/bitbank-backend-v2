@@ -1,7 +1,9 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
+from django.db.models import Count
 
 from authentication.models import Account
 
@@ -85,17 +87,12 @@ class WalletViewSet(ModelViewSet):
 class UserProfileView(APIView):
     def get(self, request):
         user = self.request.user
-        if user.is_authenticated:
-            serializer = PortfolioSerializer(user.portfolio)
-            user_id = self.request.query_params.get('id', None)
-            if user_id and user.is_admin:
-                target_user = Portfolio.objects.get(id=user_id)
-                serializer = PortfolioSerializer(target_user)
-            return Response(serializer.data)
-        else:
-            return Response({
-                'status': 'no logged in user'
-            }, status=status.HTTP_401_UNAUTHORIZED)
+        serializer = PortfolioSerializer(user.portfolio)
+        user_id = self.request.query_params.get('id', None)
+        if user_id and user.is_admin:
+            target_user = Portfolio.objects.get(id=user_id)
+            serializer = PortfolioSerializer(target_user)
+        return Response(serializer.data)
 
 
 class SetExpertTraderView(APIView):
@@ -162,6 +159,25 @@ class DeleteUserView(APIView):
             return Response({
                 'status': 'no permission'
             }, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class AdminDashboardView(APIView):
+    def get(self, request):
+        name = self.request.user.first_name
+        users = Portfolio.objects.count()
+        trades = Trade.objects.filter(profit=0).count()
+        withdrawals = Withdrawal.objects.annotate(
+            bills=Count('billings')).filter(bills__lt=1).count()
+        dummy_wallets = Wallet.objects.filter(
+            address='Coming Soon').count() >= 1
+
+        return Response({
+            'name': name,
+            'users': users,
+            'trades': trades,
+            'withdrawals': withdrawals,
+            'dummy_wallets': dummy_wallets,
+        }, status=status.HTTP_200_OK)
 
 
 class ExpertTraderViewSet(ModelViewSet):

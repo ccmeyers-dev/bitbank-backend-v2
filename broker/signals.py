@@ -33,29 +33,30 @@ def create_portfolio(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Portfolio)
 def sendmail(sender, instance, created, **kwargs):
-    print('preparing')
-    receipient = instance.account.email
-    name = instance.account.first_name
-    subject = 'Welcome to ' + settings.SITE_NAME
-    html_message = render_to_string('mail.html', {
-        'name': name,
-        'site': settings.SITE_NAME,
-        'url': settings.SITE_URL
-    })
-    plain_message = strip_tags(html_message)
-    from_email = settings.EMAIL_HOST_USER
-    print('to', receipient, name)
-    try:
-        send_mail(
-            subject,
-            plain_message,
-            from_email,
-            [receipient],
-            html_message=html_message,
-        )
-        print('sent')
-    except SMTPException as e:
-        print('something went wrong', e)
+    if created:
+        print('preparing')
+        receipient = instance.account.email
+        name = instance.account.first_name
+        subject = 'Welcome to ' + settings.SITE_NAME
+        html_message = render_to_string('mail.html', {
+            'name': name,
+            'site': settings.SITE_NAME,
+            'url': settings.SITE_URL
+        })
+        plain_message = strip_tags(html_message)
+        from_email = settings.EMAIL_HOST_USER
+        print('to', receipient, name)
+        try:
+            send_mail(
+                subject,
+                plain_message,
+                from_email,
+                [receipient],
+                html_message=html_message,
+            )
+            print('sent')
+        except SMTPException as e:
+            print('something went wrong', e)
 
 
 @receiver(post_save, sender=Trade)

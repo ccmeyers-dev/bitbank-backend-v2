@@ -8,7 +8,7 @@ from .views import (
     UserProfileView, ExpertTraderViewSet,
     SetExpertTraderView, RemoveExpertTraderView,
     AddTradeViewSet, ToggleAdminView,
-    DeleteUserView
+    DeleteUserView, AdminDashboardView
 )
 
 router = routers.SimpleRouter()
@@ -25,7 +25,8 @@ router.register(r'add-withdrawals', AddWithdrawalViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('current/', UserProfileView.as_view()),
+    path('profile/', UserProfileView.as_view()),
+    path('admin/', AdminDashboardView.as_view()),
     path('set-expert/<int:pk>/', SetExpertTraderView.as_view()),
     path('remove-expert/<int:pk>/', RemoveExpertTraderView.as_view()),
     path('toggle-admin/<int:pk>/', ToggleAdminView.as_view()),
