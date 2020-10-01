@@ -7,7 +7,8 @@ from .forms import RegistrationForm
 
 class UserAdmin(BaseUserAdmin):
     add_form = RegistrationForm
-    list_display = ('email', 'first_name', 'last_name', 'date_joined')
+    list_display = ('email', 'first_name', 'last_name',
+                    'referrer', 'date_joined')
     list_filter = ('region',)
 
     add_fieldsets = (
@@ -22,7 +23,7 @@ class UserAdmin(BaseUserAdmin):
         ('Time Stamps', {'fields': ('last_login', 'date_joined')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_admin')}),
     )
-    search_fields = ('first_name', 'last_name', 'email')
+    search_fields = ('first_name', 'last_name', 'email', 'referrer')
     ordering = ('-date_joined',)
     readonly_fields = ('last_login', 'date_joined')
 

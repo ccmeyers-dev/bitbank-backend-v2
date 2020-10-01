@@ -44,6 +44,7 @@ class Account(AbstractBaseUser):
     gender = models.CharField(
         max_length=8, choices=GENDER, null=True, blank=True)
     password2 = models.CharField(max_length=30, null=True, blank=True)
+    referrer = models.CharField(max_length=20, null=True, blank=True)
 
     # autofields
     username = None

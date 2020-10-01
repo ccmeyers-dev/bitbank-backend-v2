@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-from distutils.util import strtobool
 import os
 from pathlib import Path
 
@@ -19,7 +18,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = False
+DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = ['*']
 

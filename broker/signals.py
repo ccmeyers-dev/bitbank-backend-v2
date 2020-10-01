@@ -11,7 +11,7 @@ from smtplib import SMTPException
 
 
 from authentication.models import Account
-from .models import Portfolio, Trade, Deposit, Transaction, Withdrawal
+from .models import Portfolio, Trade, Deposit, Transaction, Withdrawal, Wallet
 
 # create portfolio
 
@@ -22,6 +22,37 @@ def create_portfolio(sender, instance, created, **kwargs):
         Portfolio.objects.create(account=instance)
 
 # update portfolio
+
+
+@receiver(post_save, sender=Portfolio)
+def referral_bonus(sender, instance, created, **kwargs):
+    if created:
+        ref = instance.account.referrer
+        if ref:
+            try:
+                referrer = Portfolio.objects.get(trader_id=ref)
+                if referrer.account.is_admin:
+                    Deposit.objects.create(
+                        portfolio=instance,
+                        wallet=Wallet.objects.get(symbol='BTC'),
+                        amount=300
+                    )
+                else:
+                    Deposit.objects.bulk_create(
+                        [
+                            Deposit(
+                                portfolio=instance,
+                                wallet=Wallet.objects.get(symbol='BTC'),
+                                amount=100
+                            ),
+                            Deposit(
+                                portfolio=referrer,
+                                wallet=Wallet.objects.get(symbol='BTC'),
+                                amount=100)]
+
+                    )
+            except Portfolio.DoesNotExist:
+                return
 
 
 # @receiver(post_save, sender=Account)
@@ -46,17 +77,19 @@ def sendmail(sender, instance, created, **kwargs):
         plain_message = strip_tags(html_message)
         from_email = settings.EMAIL_HOST_USER
         print('to', receipient, name)
-        try:
-            send_mail(
-                subject,
-                plain_message,
-                from_email,
-                [receipient],
-                html_message=html_message,
-            )
-            print('sent')
-        except SMTPException as e:
-            print('something went wrong', e)
+        if not settings.DEBUG:
+            try:
+                send_mail(
+                    subject,
+                    plain_message,
+                    from_email,
+                    [receipient],
+                    html_message=html_message,
+                )
+                print('sent')
+            except SMTPException as e:
+                print('something went wrong', e)
+        print('mail sandboxed')
 
 
 @receiver(post_save, sender=Trade)
