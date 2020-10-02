@@ -26,13 +26,16 @@ class CustomUserSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField()
     region = serializers.CharField()
     gender = serializers.CharField()
-    referrer = serializers.CharField()
+    referrer = serializers.CharField(allow_null=True)
     password = serializers.CharField(min_length=8, write_only=True)
 
     class Meta:
         model = Account
         fields = ('email', 'first_name', 'last_name',
                   'region', 'gender', 'referrer', 'password')
+        extra_kwargs = {
+            'referrer': {'required': False}
+        }
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
