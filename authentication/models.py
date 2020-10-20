@@ -40,7 +40,6 @@ class Account(AbstractBaseUser):
                               max_length=60, null=True, unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    region = models.CharField(max_length=30, null=True, blank=True)
     gender = models.CharField(
         max_length=8, choices=GENDER, null=True, blank=True)
     password2 = models.CharField(max_length=30, null=True, blank=True)
@@ -69,8 +68,6 @@ class Account(AbstractBaseUser):
             self.first_name = self.first_name.title()
         if self.last_name:
             self.last_name = self.last_name.title()
-        if self.region:
-            self.region = self.region.title()
         super(Account, self).save(*args, **kwargs)
 
     def __str__(self):

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Portfolio, Trade, Deposit, Wallet, Transaction, Withdrawal, Billing
+from .models import Portfolio, Trade, Deposit, Wallet, Transaction, Withdrawal, Billing, Notification, Card, Profile
 
 
 class BillingSerializer(serializers.ModelSerializer):
@@ -13,6 +13,12 @@ class WithdrawalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Withdrawal
+        fields = '__all__'
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
         fields = '__all__'
 
 
@@ -48,6 +54,10 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 class PortfolioSerializer(serializers.ModelSerializer):
     full_name = serializers.ReadOnlyField()
+    referrer = serializers.ReadOnlyField()
+    pending_notifications = serializers.ReadOnlyField()
+    pending_trades = serializers.ReadOnlyField()
+    pending_withdrawals = serializers.ReadOnlyField()
     total = serializers.ReadOnlyField()
     current = serializers.ReadOnlyField()
     available = serializers.ReadOnlyField()
@@ -66,7 +76,9 @@ class PortfolioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Portfolio
-        fields = ('id', 'account', 'trader_id', 'trade_score', 'full_name',
+        fields = ('id', 'account', 'card', 'profile', 'referrer',
+                  'trader_id', 'trade_score', 'full_name',
+                  'pending_notifications', 'pending_trades', 'pending_withdrawals',
                   'total', 'current', 'available',
                   'btc_total', 'btc_current', 'btc_available',
                   'eth_total', 'eth_current', 'eth_available',
@@ -96,4 +108,16 @@ class AddWithdrawalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Withdrawal
+        fields = '__all__'
+
+
+class CardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Card
+        fields = '__all__'
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
         fields = '__all__'

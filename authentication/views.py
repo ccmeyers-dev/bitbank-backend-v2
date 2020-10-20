@@ -7,9 +7,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import MyTokenObtainPairSerializer, CustomUserSerializer
 
 
-class ObtainTokenPairWithEmail(TokenObtainPairView):
-    permissions_classes = (permissions.AllowAny,)
-    serializer_class = MyTokenObtainPairSerializer
+# class ObtainTokenPairWithEmail(TokenObtainPairView):
+#     permissions_classes = (permissions.AllowAny,)
+#     serializer_class = MyTokenObtainPairSerializer
 
 
 class CustomUserCreate(APIView):

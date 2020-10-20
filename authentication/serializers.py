@@ -24,7 +24,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True),
     first_name = serializers.CharField()
     last_name = serializers.CharField()
-    region = serializers.CharField()
     gender = serializers.CharField()
     referrer = serializers.CharField(allow_null=True)
     password = serializers.CharField(min_length=8, write_only=True)
@@ -32,7 +31,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ('email', 'first_name', 'last_name',
-                  'region', 'gender', 'referrer', 'password')
+                  'gender', 'referrer', 'password')
         extra_kwargs = {
             'referrer': {'required': False}
         }

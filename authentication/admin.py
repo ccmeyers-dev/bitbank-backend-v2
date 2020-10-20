@@ -9,17 +9,17 @@ class UserAdmin(BaseUserAdmin):
     add_form = RegistrationForm
     list_display = ('email', 'first_name', 'last_name',
                     'referrer', 'date_joined')
-    list_filter = ('region',)
+    list_filter = ()
 
     add_fieldsets = (
         ('Authenticate', {
-         'fields': ('first_name', 'last_name', 'email', 'password', 'password2', 'region', 'gender')}),
+         'fields': ('first_name', 'last_name', 'email', 'password', 'password2', 'gender')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_admin')}),
     )
 
     fieldsets = (
         ('User Information', {
-         'fields': ('first_name', 'last_name', 'email', 'password', 'password2', 'region', 'gender')}),
+         'fields': ('first_name', 'last_name', 'email', 'password', 'password2', 'gender')}),
         ('Time Stamps', {'fields': ('last_login', 'date_joined')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_admin')}),
     )

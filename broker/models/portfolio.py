@@ -7,10 +7,7 @@ Account = get_user_model()
 
 
 def TraderID():
-    digits = get_random_string(length=8, allowed_chars='0123456789')
-    chars = get_random_string(
-        length=4, allowed_chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-    return "{}-{}".format(digits, chars)
+    return get_random_string(length=8)
 
 
 class Portfolio(models.Model):
@@ -28,6 +25,25 @@ class Portfolio(models.Model):
 
     def full_name(self):
         return "{} {}".format(self.account.first_name, self.account.last_name)
+
+    def referrer(self):
+        if self.account.referrer:
+            try:
+                referrer = Portfolio.objects.get(
+                    trader_id=self.account.referrer)
+                return referrer.account.email
+            except:
+                return "None"
+        return "None"
+
+    def pending_notifications(self):
+        return self.notifications.filter(read=False).count()
+
+    def pending_trades(self):
+        return self.trades.filter(profit__lte=0).count()
+
+    def pending_withdrawals(self):
+        return self.withdrawals.filter(completed=False).count()
 
     def book(self):
         return sum([deposit.amount for deposit in self.deposits.all()]) - sum([trade.amount for trade in self.trades.all()])

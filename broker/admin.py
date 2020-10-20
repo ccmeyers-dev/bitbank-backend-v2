@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Portfolio, Wallet, Deposit, Trade, Transaction, Withdrawal, Billing
+from .models import Portfolio, Wallet, Deposit, Trade, Transaction, Withdrawal, Billing, Notification, Card, Profile
 # Register your models here.
 
 
@@ -61,3 +61,18 @@ class TransactionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Transaction, TransactionAdmin)
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('portfolio', 'title', 'read')
+
+
+@admin.register(Card)
+class CardAdmin(admin.ModelAdmin):
+    list_display = ('portfolio', 'card_number', 'first_name', 'last_name')
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('portfolio', 'city', 'state', 'country', 'zip_code')

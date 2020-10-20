@@ -24,33 +24,22 @@ def create_portfolio(sender, instance, created, **kwargs):
 # update portfolio
 
 
-@receiver(post_save, sender=Portfolio)
+@receiver(post_save, sender=Deposit)
 def referral_bonus(sender, instance, created, **kwargs):
     if created:
-        ref = instance.account.referrer
-        if ref:
+        ref = instance.portfolio.account.referrer
+        instance_user_deposits = instance.portfolio.deposits.all().count()
+
+        if ref and instance_user_deposits <= 1:
             try:
                 referrer = Portfolio.objects.get(trader_id=ref)
-                if referrer.account.is_admin:
-                    Deposit.objects.create(
-                        portfolio=instance,
-                        wallet=Wallet.objects.get(symbol='BTC'),
-                        amount=300
-                    )
-                else:
-                    Deposit.objects.bulk_create(
-                        [
-                            Deposit(
-                                portfolio=instance,
-                                wallet=Wallet.objects.get(symbol='BTC'),
-                                amount=100
-                            ),
-                            Deposit(
-                                portfolio=referrer,
-                                wallet=Wallet.objects.get(symbol='BTC'),
-                                amount=100)]
-
-                    )
+                bonus = float(instance.amount) * 0.1
+                wallet = instance.wallet
+                Deposit.objects.create(
+                    portfolio=referrer,
+                    wallet=wallet,
+                    amount=bonus
+                )
             except Portfolio.DoesNotExist:
                 return
 
