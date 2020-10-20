@@ -57,7 +57,7 @@ def sendmail(sender, instance, created, **kwargs):
         print('preparing')
         receipient = instance.account.email
         name = instance.account.first_name
-        subject = 'Welcome to '+settings.SITE_NAME
+        subject = 'Welcome to ' + settings.SITE_NAME
         html_message = render_to_string('mail.html', {
             'name': name,
             'site': settings.SITE_NAME,
