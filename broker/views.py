@@ -103,13 +103,16 @@ class UserProfileView(APIView):
     def get(self, request):
         user = self.request.user
         try:
-            serializer = PortfolioSerializer(user.portfolio)
+            serializer = PortfolioSerializer(
+                user.portfolio, context={'request': request})
             user_id = self.request.query_params.get('id', None)
             if user_id and user.is_admin:
                 target_user = Portfolio.objects.get(id=user_id)
-                serializer = PortfolioSerializer(target_user)
+                serializer = PortfolioSerializer(
+                    target_user, context={'request': request})
             return Response(serializer.data)
-        except:
+        except Exception as e:
+            print(e)
             return Response({'data': None}, status=status.HTTP_200_OK)
 
 
@@ -271,13 +274,15 @@ class ProfileView(APIView):
         if user_id and user.is_admin:
             try:
                 target_user = Portfolio.objects.get(id=user_id)
-                serializer = ProfileSerializer(target_user.profile, context={'request': request})
+                serializer = ProfileSerializer(
+                    target_user.profile, context={'request': request})
                 return Response(serializer.data,  status=status.HTTP_200_OK)
             except:
                 return Response({'data': None}, status=status.HTTP_200_OK)
         else:
             try:
-                serializer = ProfileSerializer(user.portfolio.profile, context={'request': request})
+                serializer = ProfileSerializer(
+                    user.portfolio.profile, context={'request': request})
                 return Response(serializer.data,  status=status.HTTP_200_OK)
             except:
                 return Response({'data': None}, status=status.HTTP_200_OK)
