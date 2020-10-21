@@ -262,7 +262,8 @@ class ProfileView(APIView):
     parser_classess = (MultiPartParser, FormParser)
 
     def post(self, request):
-        serializer = ProfileSerializer(data=request.data)
+        serializer = ProfileSerializer(
+            data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save(portfolio=request.user.portfolio)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
