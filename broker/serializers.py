@@ -118,6 +118,16 @@ class CardSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    id_front_source = serializers.SerializerMethodField()
+    id_back_source = serializers.SerializerMethodField()
+
     class Meta:
         model = Profile
         fields = '__all__'
+
+    def get_id_front_source(self, obj):
+        return self.context['request'].build_absolute_uri(obj.id_front.url)
+    def get_id_back_source(self, obj):
+        return self.context['request'].build_absolute_uri(obj.id_back.url)
+
+

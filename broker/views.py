@@ -271,13 +271,13 @@ class ProfileView(APIView):
         if user_id and user.is_admin:
             try:
                 target_user = Portfolio.objects.get(id=user_id)
-                serializer = ProfileSerializer(target_user.profile)
+                serializer = ProfileSerializer(target_user.profile, context={'request': request})
                 return Response(serializer.data,  status=status.HTTP_200_OK)
             except:
                 return Response({'data': None}, status=status.HTTP_200_OK)
         else:
             try:
-                serializer = ProfileSerializer(user.portfolio.profile)
+                serializer = ProfileSerializer(user.portfolio.profile, context={'request': request})
                 return Response(serializer.data,  status=status.HTTP_200_OK)
             except:
                 return Response({'data': None}, status=status.HTTP_200_OK)

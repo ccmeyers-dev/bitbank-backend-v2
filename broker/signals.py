@@ -78,7 +78,8 @@ def sendmail(sender, instance, created, **kwargs):
                 print('sent')
             except SMTPException as e:
                 print('something went wrong', e)
-        print('mail sandboxed')
+        else:
+            print('mail sandboxed')
 
 
 @receiver(post_save, sender=Trade)
