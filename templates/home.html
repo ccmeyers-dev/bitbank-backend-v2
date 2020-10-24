@@ -129,6 +129,16 @@
                       >Register</a
                     >
                   </li>
+                  {%if user.is_admin%}
+                  <li class="nav-item">
+                    <a
+                      class="nav-link btn btn-pill buy-token js-scroll-trigger"
+                      href="https://bitmaxv2.pythonanywhere.com/admin"
+                      target="_blank"
+                      >Login Admin</a
+                    >
+                  </li>
+                  {%endif%}
                 </ul>
               </div>
               <!--nav link-->
@@ -159,6 +169,15 @@
                 class="btn btn-gradient btn-pill text-uppercase"
                 >Get Started</a
               >
+
+              {%if user.is_admin%}
+              <a
+                href="http://127.0.0.1:8000/admin"
+                target="_blank"
+                class="btn btn-gradient btn-pill text-uppercase"
+                >Login Admin {{user.first_name}}</a
+              >
+              {%endif%}
               <div class="mt-md-5 mt-3 sm-txt gray-txt">
                 Already Registered?
                 <a href="https://bitmax.live/auth/login">Login</a>

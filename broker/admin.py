@@ -57,7 +57,7 @@ admin.site.register(Trade, TradeAdmin)
 
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('portfolio', 'amount', 'type',
-                    'profit', 'duration', 'withdrawal_date')
+                    'profit', 'duration', 'date_created', 'withdrawal_date')
 
 
 admin.site.register(Transaction, TransactionAdmin)
@@ -65,7 +65,7 @@ admin.site.register(Transaction, TransactionAdmin)
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
-    list_display = ('portfolio', 'title', 'read')
+    list_display = ('portfolio', 'title', 'read', 'date_created')
 
 
 @admin.register(Card)

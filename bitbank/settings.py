@@ -70,9 +70,10 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-        #'rest_framework.renderers.BrowsableAPIRenderer',
+        # 'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     # 'DATETIME_FORMAT': '%s.%f',
+    # 'DATETIME_FORMAT': '%m-%d-%Y'
 }
 
 SIMPLE_JWT = {

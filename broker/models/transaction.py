@@ -23,39 +23,42 @@ class TransactionManager(models.Manager):
 
 class Transaction(models.Model):
     portfolio = models.ForeignKey(
-        Portfolio, related_name='transactions', null=True, on_delete=models.CASCADE)
-    wallet = models.ForeignKey(Wallet, null=True, on_delete=models.CASCADE)
-    amount = models.FloatField()
-    date_created = models.DateTimeField(auto_now_add=True)
+        Portfolio, related_name='transactions', null=True, on_delete=models.CASCADE, editable=False)
+    wallet = models.ForeignKey(
+        Wallet, null=True, on_delete=models.CASCADE, editable=False)
+    amount = models.FloatField(editable=False)
 
     # transaction identifier
-    type = models.CharField(max_length=20, blank=True, null=True)
+    type = models.CharField(max_length=20, blank=True,
+                            null=True, editable=False)
     trace_id = models.IntegerField(editable=False, blank=True, null=True)
 
     # trade specific fields
-    profit = models.FloatField(blank=True, null=True)
-    duration = models.IntegerField(blank=True, null=True)
+    profit = models.FloatField(blank=True, null=True, editable=False)
+    duration = models.IntegerField(blank=True, null=True, editable=False)
+
+    date_created = models.DateTimeField(default=timezone.now, editable=False)
     withdrawal_date = models.DateTimeField(
         editable=False, blank=True, null=True)
 
     objects = TransactionManager()
 
     class Meta:
-        ordering = ('-id',)
+        ordering = ('-date_created',)
 
     def __str__(self):
         return str(self.amount) + " " + str(self.type)
 
-    def save(self, *args, **kwargs):
-        if self.type == 'buy' or self.type == 'sell' or self.type == 'smart':
-            span = timedelta(days=self.duration)
-            if self.date_created is not None:
-                self.withdrawal_date = self.date_created + span
-            else:
-                self.withdrawal_date = timezone.now() + span
-            if self.profit is None:
-                self.profit = 0
-        super(Transaction, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self.type == 'buy' or self.type == 'sell' or self.type == 'smart':
+    #         span = timedelta(days=self.duration)
+    #         if self.date_created is not None:
+    #             self.withdrawal_date = self.date_created + span
+    #         else:
+    #             self.withdrawal_date = timezone.now() + span
+    #         if self.profit is None:
+    #             self.profit = 0
+    #     super(Transaction, self).save(*args, **kwargs)
 
     def ratio(self):
         withdate = self.date_created + timedelta(days=self.duration)

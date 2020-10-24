@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from .portfolio import Portfolio
 from .wallet import Wallet
@@ -24,13 +25,13 @@ class Deposit(models.Model):
         Portfolio, related_name='deposits', null=True, on_delete=models.CASCADE)
     wallet = models.ForeignKey(Wallet, null=True, on_delete=models.CASCADE)
     amount = models.FloatField()
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(default=timezone.now)
     type = models.CharField(editable=False, max_length=20, default='deposit')
 
     objects = DepositManager()
 
     class Meta:
-        ordering = ('-id',)
+        ordering = ('-date_created',)
 
     def __str__(self):
         return str(self.amount) + " - Deposit"

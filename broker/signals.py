@@ -92,7 +92,9 @@ def trade_to_transaction(sender, instance, created, **kwargs):
             type=instance.type,
             trace_id=instance.id,
             profit=instance.profit,
-            duration=instance.duration
+            duration=instance.duration,
+            date_created=instance.date_created,
+            withdrawal_date=instance.withdrawal_date
         )
     elif not created:
         try:
@@ -105,6 +107,8 @@ def trade_to_transaction(sender, instance, created, **kwargs):
             transaction.amount = instance.amount
             transaction.profit = instance.profit
             transaction.duration = instance.duration
+            transaction.date_created = instance.date_created
+            transaction.withdrawal_date = instance.withdrawal_date
             transaction.save()
         except Transaction.DoesNotExist:
             return
@@ -136,7 +140,9 @@ def deposit_to_transaction(sender, instance, created, **kwargs):
             type=instance.type,
             trace_id=instance.id,
             profit=0,
-            duration=0
+            duration=0,
+            date_created=instance.date_created,
+            withdrawal_date=instance.date_created
         )
     elif not created:
         try:
@@ -147,6 +153,8 @@ def deposit_to_transaction(sender, instance, created, **kwargs):
                 trace_id=instance.id
             )
             transaction.amount = instance.amount
+            transaction.date_created = instance.date_created
+            transaction.withdrawal_date = instance.date_created
             transaction.save()
         except Transaction.DoesNotExist:
             return
@@ -177,7 +185,9 @@ def withdrawal_to_transaction(sender, instance, created, **kwargs):
             type=instance.type,
             trace_id=instance.id,
             profit=0,
-            duration=0
+            duration=0,
+            date_created=instance.date_created,
+            withdrawal_date=instance.date_created
         )
     elif not created:
         try:
@@ -187,6 +197,8 @@ def withdrawal_to_transaction(sender, instance, created, **kwargs):
                 trace_id=instance.id
             )
             transaction.amount = instance.amount
+            transaction.date_created = instance.date_created
+            transaction.withdrawal_date = instance.date_created
             transaction.save()
         except Transaction.DoesNotExist:
             return

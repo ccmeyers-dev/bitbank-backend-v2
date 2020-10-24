@@ -42,18 +42,6 @@ class BillingViewSet(ModelViewSet):
     serializer_class = BillingSerializer
 
 
-class WithdrawalViewSet(ModelViewSet):
-    queryset = Withdrawal.objects.all()
-    serializer_class = WithdrawalSerializer
-
-    def get_queryset(self):
-        user_id = self.request.query_params.get('id', None)
-        user = self.request.user
-        if user_id and user.is_admin:
-            return self.queryset.filter(portfolio__id=user_id)
-        return self.queryset.filter(portfolio=user.portfolio)
-
-
 class TransactionViewSet(ModelViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
@@ -67,6 +55,18 @@ class TransactionViewSet(ModelViewSet):
 class PortfolioViewSet(ModelViewSet):
     queryset = Portfolio.objects.all()
     serializer_class = PortfolioSerializer
+
+
+class WithdrawalViewSet(ModelViewSet):
+    queryset = Withdrawal.objects.all()
+    serializer_class = WithdrawalSerializer
+
+    def get_queryset(self):
+        user_id = self.request.query_params.get('id', None)
+        user = self.request.user
+        if user_id and user.is_admin:
+            return self.queryset.filter(portfolio__id=user_id)
+        return self.queryset.filter(portfolio=user.portfolio)
 
 
 class TradeViewSet(ModelViewSet):

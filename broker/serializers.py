@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from rest_framework import serializers
 from .models import Portfolio, Trade, Deposit, Wallet, Transaction, Withdrawal, Billing, Notification, Card, Profile
 
@@ -15,11 +17,23 @@ class WithdrawalSerializer(serializers.ModelSerializer):
         model = Withdrawal
         fields = '__all__'
 
+    def to_internal_value(self, data):
+        if data['date_created'] == None:
+            data['date_created'] = timezone.now()
+
+        return super(WithdrawalSerializer, self).to_internal_value(data)
+
 
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = '__all__'
+
+    def to_internal_value(self, data):
+        if data['date_created'] == None:
+            data['date_created'] = timezone.now()
+
+        return super(NotificationSerializer, self).to_internal_value(data)
 
 
 class WalletSerializer(serializers.ModelSerializer):
@@ -33,13 +47,27 @@ class DepositSerializer(serializers.ModelSerializer):
         model = Deposit
         fields = '__all__'
 
+    def to_internal_value(self, data):
+        if data['date_created'] == None:
+            data['date_created'] = timezone.now()
+
+        return super(DepositSerializer, self).to_internal_value(data)
+
 
 class TradeSerializer(serializers.ModelSerializer):
     current = serializers.ReadOnlyField()
+    # date_created = serializers.DateTimeField(
+    #     required=False, allow_null=True)
 
     class Meta:
         model = Trade
         fields = '__all__'
+
+    def to_internal_value(self, data):
+        if data['date_created'] == None:
+            data['date_created'] = timezone.now()
+
+        return super(TradeSerializer, self).to_internal_value(data)
 
 
 class TransactionSerializer(serializers.ModelSerializer):
@@ -63,6 +91,8 @@ class ExpertTraderSerializer(serializers.ModelSerializer):
 
 
 class AddTradeSerializer(serializers.ModelSerializer):
+    # date_created = serializers.DateTimeField(
+    #     required=False, allow_null=True)
 
     class Meta:
         model = Trade

@@ -33,18 +33,19 @@ class Trade(models.Model):
         Portfolio, related_name='trades', null=True, on_delete=models.CASCADE)
     wallet = models.ForeignKey(Wallet, null=True, on_delete=models.CASCADE)
     amount = models.FloatField()
-    date_created = models.DateTimeField(auto_now_add=True)
     type = models.CharField(
         max_length=20, choices=TRADE_CHOICES, default='buy')
     profit = models.FloatField(blank=True, null=True)
     duration = models.IntegerField()
+
+    date_created = models.DateTimeField(default=timezone.now)
     withdrawal_date = models.DateTimeField(
         editable=False, blank=True, null=True)
 
     objects = TradeManager()
 
     class Meta:
-        ordering = ('-id',)
+        ordering = ('-date_created',)
 
     def __str__(self):
         return str(self.amount) + " - Trade"

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from .portfolio import Portfolio
 from .wallet import Wallet
@@ -33,7 +34,7 @@ class Withdrawal(models.Model):
     wallet = models.CharField(
         max_length=10, choices=WALLET_CHOICES, default='BTC')
     amount = models.FloatField()
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(default=timezone.now)
     type = models.CharField(
         editable=False, max_length=20, default='withdrawal')
 
@@ -42,7 +43,7 @@ class Withdrawal(models.Model):
     objects = WithdrawalManager()
 
     class Meta:
-        ordering = ('-id',)
+        ordering = ('-date_created',)
 
     def __str__(self):
         return str(self.portfolio) + " " + str(self.amount) + " " + str(self.wallet) + " - Withdrawal"
