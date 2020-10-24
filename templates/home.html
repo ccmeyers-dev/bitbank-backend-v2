@@ -133,7 +133,7 @@
                   <li class="nav-item">
                     <a
                       class="nav-link btn btn-pill buy-token js-scroll-trigger"
-                      href="https://bitmaxv2.pythonanywhere.com/admin"
+                      href="admin"
                       target="_blank"
                       >Login Admin</a
                     >
@@ -172,10 +172,10 @@
 
               {%if user.is_admin%}
               <a
-                href="http://127.0.0.1:8000/admin"
+                href="/admin"
                 target="_blank"
                 class="btn btn-gradient btn-pill text-uppercase"
-                >Login Admin {{user.first_name}}</a
+                >Login Admin</a
               >
               {%endif%}
               <div class="mt-md-5 mt-3 sm-txt gray-txt">
