@@ -53,7 +53,7 @@ class TransactionViewSet(ModelViewSet):
 
 # undefined use atm
 class PortfolioViewSet(ModelViewSet):
-    queryset = Portfolio.objects.all()
+    queryset = Portfolio.objects.all()[:20]
     serializer_class = PortfolioSerializer
 
 
