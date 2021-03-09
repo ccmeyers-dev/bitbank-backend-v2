@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 
-from django.db.models import Count
+from django.db.models import Count, Q
 
 from authentication.models import Account
 
@@ -53,8 +53,14 @@ class TransactionViewSet(ModelViewSet):
 
 # undefined use atm
 class PortfolioViewSet(ModelViewSet):
-    queryset = Portfolio.objects.all()[:20]
+    queryset = Portfolio.objects.all()
     serializer_class = PortfolioSerializer
+
+    def get_queryset(self):
+        search = self.request.query_params.get('search', None)
+        if search:
+            return self.queryset.filter(Q(account__email__icontains=search) | Q(account__first_name__icontains=search) | Q(account__last_name__icontains=search))[:20]
+        return self.queryset[:20]
 
 
 class WithdrawalViewSet(ModelViewSet):
